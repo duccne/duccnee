@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOANGKUN STORE - PREMIUM GAMING SHOP</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+
+        .contact-sidebar {
+    position: fixed;
+    right: 20px;
+    bottom: 80px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact-item {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: 0.3s;
+}
+
+.contact-item:hover {
+    transform: scale(1.1) translateX(-5px);
+}
+
+.zalo { background: #0068ff; }
+.facebook { background: #1877f2; }
+.telegram { background: #229ed9; }
+        
+        :root { --primary: #ff0000; --secondary: #121212; --accent: #ff4d4d; --text: #ffffff; --bg: #050505; --card-bg: #1a1a1a; }
+        body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        
+        /* Hiệu ứng hạt nền */
+        #particleCanvas { position: fixed; top: 0; left: 0; z-index: -1; background: radial-gradient(circle, #1a0000 0%, #050505 100%); }
+        
+        /* Navigation Bar */
+        nav { background: rgba(0, 0, 0, 0.85); border-bottom: 2px solid var(--primary); padding: 15px 0; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(15px); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+/* Tìm đến dòng 24 và thay bằng đoạn này */
+.logo {
+    font-size: 26px;
+    font-weight: 900;
+    text-transform: uppercase;
+    animation: rgb-glow 4s infinite linear; /* Thêm dòng này để kích hoạt đổi màu */
+}
+
+/* Thêm hiệu ứng chạy màu vào bất kỳ đâu trong thẻ <style> */
+@keyframes rgb-glow {
+    0% { color: #ff0000; text-shadow: 0 0 15px #ff0000; }
+    33% { color: #00ff00; text-shadow: 0 0 15px #00ff00; }
+    66% { color: #00ffff; text-shadow: 0 0 15px #00ffff; }
+    100% { color: #ff0000; text-shadow: 0 0 15px #ff0000; }
+}
+        /* Nút bấm xịn */
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .btn-red { background: var(--primary); color: white; box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
+        .btn-red:hover { background: #ff3333; transform: scale(1.05); }
+        
+        /* Grid Sản phẩm */
+        .shop-title { border-left: 5px solid var(--primary); padding-left: 15px; margin: 40px 0 20px; font-size: 22px; text-transform: uppercase; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid #222; transition: 0.4s; position: relative; }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(255,0,0,0.1); }
+        .thumb { height: 180px; width: 100%; }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .card-body { padding: 20px; text-align: center; }
+        .price { color: var(--primary); font-size: 22px; font-weight: 800; margin: 10px 0; }
+
+        /* Modal hệ thống */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px); }
+        .modal-content { background: #151515; padding: 35px; border-radius: 20px; border: 1px solid #333; max-width: 400px; width: 90%; text-align: center; position: relative; }
+        .input-group { position: relative; margin-bottom: 15px; text-align: left; }
+        .input-group input { width: 100%; padding: 12px 15px; background: #000; border: 1px solid #333; border-radius: 8px; color: #fff; box-sizing: border-box; outline: none; }
+        .input-group input:focus { border-color: var(--primary); }
+        
+        /* Thông báo giả lập */
+        .fake-noti { position: fixed; bottom: -100px; left: 20px; background: rgba(20, 20, 20, 0.95); padding: 12px 20px; border-left: 4px solid var(--primary); border-radius: 8px; transition: 0.5s; z-index: 999; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .fake-noti.show { bottom: 20px; }
+
+        /* Lịch sử mua hàng */
+        .history-box { margin-top: 50px; background: #111; padding: 20px; border-radius: 15px; border: 1px solid #222; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #222; }
+        th { color: var(--primary); }
+    </style>
+</head>
+<body>
+
+<canvas id="particleCanvas"></canvas>
+
+<nav>
+    <div class="container nav-content">
+        <a href="#" class="logo">HOANGKUN<span>STORE</span></a>
+        <div id="auth-section">
+            <button class="btn btn-red" onclick="showAuth(false)">ĐĂNG NHẬP / ĐĂNG KÝ</button>
+        </div>
+        <div id="user-section" style="display: none; align-items: center; gap: 15px;">
+            <div style="font-size: 14px;">Xin chào, <b id="display-name" style="color:var(--primary)">...</b></div>
+            <div style="background: #222; padding: 5px 12px; border-radius: 20px; font-size: 14px;">
+                <i class="fas fa-wallet" style="color:#00ff00"></i> <span id="user-balance">0đ</span>
+            </div>
+            <button class="btn btn-red" style="padding: 5px 10px; font-size: 12px;" onclick="showRecharge()">NẠP</button>
+            <i class="fas fa-sign-out-alt" style="cursor:pointer; color: #666;" onclick="logout()"></i>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="banner" style="text-align: center; padding: 70px 0; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.postimg.cc/d1B8FCPx/Gemini-Generated-Image-x6o4esx6o4esx6o4.png') center/cover; border-radius: 20px; margin-top: 20px; border: 1px solid #333;">
+        <h1 style="font-size: 40px; margin: 0; letter-spacing: 2px;">HOANGKUN STORE</h1>
+        <p style="color: #888;">Hệ thống mua bán Source Code tự động - Uy tín - Bảo mật</p>
+    </div>
+
+    <h2 class="shop-title"><i class="fas fa-fire"></i> Sản phẩm mới nhất</h2>
+    <div class="grid" id="productGrid"></div>
+
+    <div id="history-section" class="history-box" style="display:none;">
+        <h3><i class="fas fa-history"></i> Lịch sử mua hàng</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Giá tiền</th>
+                    <th>Thời gian</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody id="history-body">
+                <tr><td colspan="4" style="text-align:center">Chưa có giao dịch nào</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <h2 id="authTitle" style="margin-top:0">LOGIN</h2>
+        <div class="input-group">
+            <label style="font-size: 12px; color: #666;">Tên tài khoản</label>
+            <input type="text" id="userInput" placeholder="Gõ tên tài khoản...">
+        </div>
+        <div class="input-group">
+            <label style="font-size: 12px; color: #666;">Mật khẩu</label>
+            <input type="password" id="passInput" placeholder="*****">
+        </div>
+        <div id="regFields" style="display: none;">
+            <div class="input-group">
+                <label style="font-size: 12px; color: #666;">Xác nhận mật khẩu</label>
+                <input type="password" id="confirmInput" placeholder="*****">
+            </div>
+        </div>
+        <button class="btn btn-red" style="width: 100%; margin-top: 10px;" onclick="handleAuth()">XÁC NHẬN</button>
+        <p class="auth-switch">
+            <span id="switchText">Chưa có tài khoản?</span> 
+            <b onclick="toggleAuth()" style="color:var(--primary); cursor:pointer">Bấm vào đây</b>
+        </p>o
+        <div style="margin-top: 20px; font-size: 13px; color: #444; cursor: pointer;" onclick="closeModal('authModal')">Đóng cửa sổ</div>
+    </div>
+</div>
+
+<div id="rechargeModal" class="modal">
+    <div class="modal-content">
+        <h2 style="color:var(--primary)">NẠP TIỀN</h2>
+        <div style="background: #000; padding: 15px; border-radius: 10px; text-align: left; font-size: 14px; line-height: 1.8;">
+            <div>Ngân hàng: <b>TECHCOMBANK</b></div>
+            <div>Số tài khoản: <b style="color: #00ff00;">3120720060</b></div>
+            <div>Chủ TK: <b>NGUYEN VIET HOANG</b></div>
+            <div style="border-top: 1px dashed #333; margin-top: 10px; padding-top: 10px;">
+                Nội dung chuyển khoản:<br>
+                <b style="color: var(--primary); font-size: 18px;">NAP <span id="ck-name">...</span></b>
+            </div>
+        </div>
+        <p style="font-size: 12px; color: #666; margin-top: 15px;">Vui lòng chuyển đúng nội dung. Tiền sẽ được cộng sau 1-5 phút.</p>
+        <button class="btn btn-red" style="width: 100%;" onclick="closeModal('rechargeModal')">TÔI ĐÃ CHUYỂN</button>
+    </div>
+</div>
+
+<div id="fakeNoti" class="fake-noti">
+    <i class="fas fa-check-circle" style="color: #00ff00;"></i>
+    <span id="fakeNotiText"></span>
+</div>
+
+<script>
+    // --- 1. KẾT NỐI FIREBASE ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDqpk71mVDWCP3jk7fxbHZayz92LTheY7g",
+        databaseURL: "https://hoangkun-594d0-default-rtdb.firebaseio.com",
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // --- 2. DỮ LIỆU CỬA HÀNG ---
+    const products = [
+    { id: 1, name: "CODE TRAITYM 1", price: 22000, img: "https://cellphones.com.vn/sforum/wp-content/uploads/2024/03/Huong-dan-tao-code-trai-tim-html-tang-nguoi-than-yeu-nhan-ngay-8-3-3.jpg" },
+    { id: 2, name: "CODE TRAITYM 2", price: 28000, img: "https://cellphones.com.vn/sforum/wp-content/uploads/2024/03/Huong-dan-tao-code-trai-tim-html-tang-nguoi-than-yeu-nhan-ngay-8-3-9.jpg" },
+    { id: 3, name: "CODE TRAITYM 3", price: 32000, img: "https://cellphones.com.vn/sforum/wp-content/uploads/2024/03/Huong-dan-tao-code-trai-tim-html-tang-nguoi-than-yeu-nhan-ngay-8-3-13.jpg" },
+    { id: 4, name: "CODE WEB SHOP", price: 350000, img: "https://i.postimg.cc/JzmdcN7p/game-title.jpg" },
+    { id: 5, name: "CODE GAME BẮN CUNG", price: 60000, img: "https://i.postimg.cc/svBYRYkr/IMG-6222.png" },
+    { id: 6, name: "CODE WEB MÈO CUTE", price: 75000, img: "https://i.postimg.cc/QKFThDy3/IMG-6223.gif" },
+    { id: 7, name: "CODE HIỆU ỨNG RỒNG", price: 69000, img: "https://i.postimg.cc/Czfq2F8R/IMG-6224.gif" },
+    { id: 8, name: "CODE HIỆU ỨNG CHUỘT 2", price: 65000, img: "https://i.postimg.cc/K3mMVW6Q/IMG-6225.gif" },
+    { id: 9, name: "CODE HIỆU ỨNG CHUỘT 3", price: 67000, img: "https://i.postimg.cc/Bt3HX8jF/IMG-6226.gif" },
+    { id: 10, name: "Code Thư Tỏ Tình", price: 50000, img: "https://i.postimg.cc/q62Czw4K/IMG-6227.gif" },
+    { id: 11, name: "Code Thiệp Chúc Giáng Sinh", price: 51000, img: "https://i.postimg.cc/3yHJnG5Y/IMG-6228.png" },
+    { id: 12, name: "CODE HIỆU ỨNG CHUỘT 4", price: 63000, img: "https://i.postimg.cc/NKjWYf6d/IMG-6231.gif" },
+    { id: 13, name: "CODE HIỆU ỨNG CHUỘT 5", price: 58000, img: "https://i.postimg.cc/HrkfHswf/IMG-6232.gif" },
+    { id: 14, name: "CODE HIỆU ỨNG LOADDING", price: 21000, img: "https://i.postimg.cc/pmLgxXfS/IMG-6233.png" }
+];
+
+    function renderProducts() {
+        document.getElementById('productGrid').innerHTML = products.map(p => `
+            <div class="card">
+                <div class="thumb"><img src="${p.img}"></div>
+                <div class="card-body">
+                    <h3 style="font-size:16px; margin:0;">${p.name}</h3>
+                    <div class="price">${p.price.toLocaleString()}đ</div>
+                    <button class="btn btn-red" style="width:100%" onclick="buyItem('${p.name}', ${p.price})">MUA NGAY</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // --- 3. LOGIC TÀI KHOẢN (ĐÃ FIX LỖI) ---
+    let isRegisterMode = false;
+
+    function showAuth(isReg) {
+        isRegisterMode = isReg;
+        updateAuthUI();
+        document.getElementById('authModal').style.display = 'flex';
+    }
+
+    function toggleAuth() {
+        isRegisterMode = !isRegisterMode;
+        updateAuthUI();
+    }
+
+    function updateAuthUI() {
+        document.getElementById('authTitle').innerText = isRegisterMode ? "ĐĂNG KÝ" : "ĐĂNG NHẬP";
+        document.getElementById('regFields').style.display = isRegisterMode ? "block" : "none";
+        document.getElementById('switchText').innerText = isRegisterMode ? "Đã có tài khoản?" : "Chưa có tài khoản?";
+    }
+
+    function handleAuth() {
+        const user = document.getElementById('userInput').value.trim().toLowerCase();
+        const pass = document.getElementById('passInput').value;
+
+        if(!user || !pass) return Swal.fire("Lỗi", "Vui lòng nhập đầy đủ!", "error");
+
+        if(isRegisterMode) {
+            const confirm = document.getElementById('confirmInput').value;
+            if(pass !== confirm) return Swal.fire("Lỗi", "Mật khẩu không khớp!", "error");
+
+            db.ref('users/' + user).once('value').then(snap => {
+                if(snap.exists()) {
+                    Swal.fire("Lỗi", "Tên tài khoản đã tồn tại!", "error");
+                } else {
+                    db.ref('users/' + user).set({
+                        pass: pass,
+                        balance: 0,
+                        createdAt: new Date().toLocaleString()
+                    }).then(() => {
+                        Swal.fire("Thành công", "Đăng ký thành công! Hãy đăng nhập.", "success");
+                        isRegisterMode = false;
+                        updateAuthUI();
+                    });
+                }
+            });
+        } else {
+            db.ref('users/' + user).once('value').then(snap => {
+                const data = snap.val();
+                if(data && data.pass === pass) {
+                    localStorage.setItem('hoangUser', user);
+                    Swal.fire("Chào mừng", "Đăng nhập thành công!", "success").then(() => location.reload());
+                } else {
+                    Swal.fire("Lỗi", "Sai tài khoản hoặc mật khẩu!", "error");
+                }
+            });
+        }
+    }
+
+    // --- 4. QUẢN LÝ TRẠNG THÁI NGƯỜI DÙNG ---
+    function checkLogin() {
+        const user = localStorage.getItem('hoangUser');
+        if(user) {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('user-section').style.display = 'flex';
+            document.getElementById('history-section').style.display = 'block';
+            document.getElementById('display-name').innerText = user;
+            document.getElementById('ck-name').innerText = user.toUpperCase();
+            
+            // Lắng nghe số dư thực tế từ Firebase
+            db.ref('users/' + user).on('value', snap => {
+                const data = snap.val();
+                if(data) {
+                    const balance = data.balance || 0;
+                    document.getElementById('user-balance').innerText = balance.toLocaleString() + 'đ';
+                    localStorage.setItem('hoangBal', balance);
+                }
+            });
+
+            // Tải lịch sử mua hàng
+            loadHistory(user);
+        }
+    }
+
+    function buyItem(name, price) {
+        const user = localStorage.getItem('hoangUser');
+        if(!user) return showAuth(false);
+
+        const currentBal = parseInt(localStorage.getItem('hoangBal') || 0);
+        if(currentBal < price) {
+            Swal.fire("Thiếu tiền", "Số dư không đủ để mua sản phẩm này!", "warning").then(() => showRecharge());
+            return;
+        }
+
+        Swal.fire({
+            title: 'Xác nhận mua?',
+            text: Bạn có chắc muốn mua ${name} với giá ${price.toLocaleString()}đ?,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#ff0000',
+            confirmButtonText: 'MUA NGAY'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const newBal = currentBal - price;
+                const historyRef = db.ref('history/' + user).push();
+                
+                // Trừ tiền và lưu lịch sử đồng thời
+                db.ref('users/' + user).update({ balance: newBal }).then(() => {
+                    historyRef.set({
+                        product: name,
+                        price: price,
+                        date: new Date().toLocaleString(),
+                        status: "Hoàn thành"
+                    });
+                    Swal.fire("Thành công", "Giao dịch thành công! Vui lòng liên hệ Admin nhận Code.", "success");
+                });
+            }
+        });
+    }
+
+    function loadHistory(user) {
+        db.ref('history/' + user).on('value', snap => {
+            const historyBody = document.getElementById('history-body');
+            const data = snap.val();
+            if(!data) return;
+
+            let html = '';
+            for(let id in data) {
+                html = `<tr>
+                    <td>${data[id].product}</td>
+                    <td>${data[id].price.toLocaleString()}đ</td>
+                    <td>${data[id].date}</td>
+                    <td style="color:#00ff00">${data[id].status}</td>
+                </tr>` + html;
+            }
+            historyBody.innerHTML = html;
+        });
+    }
+
+    function logout() { localStorage.removeItem('hoangUser'); location.reload(); }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function showRecharge() { document.getElementById('rechargeModal').style.display = 'flex'; }
+
+    // --- 5. HIỆU ỨNG VÀ TRANG TRÍ ---
+    function initParticles() {
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let particles = [];
+        for(let i=0; i<60; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: Math.random() - 0.5,
+                vy: Math.random() - 0.5
+            });
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI*2); ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+
+    function startFakeNoti() {
+        const names = ["Quốc Bảo", "Văn Nam", "Thanh Tùng", "Minh Hằng", "Đức Huy"];
+        const prices = ["50,000đ", "200,000đ", "100,000đ", "500,000đ"];
+        setInterval(() => {
+            const noti = document.getElementById('fakeNoti');
+            document.getElementById('fakeNotiText').innerHTML = Khách hàng <b>${names[Math.floor(Math.random()*names.length)]}</b> vừa nạp thành công ${prices[Math.floor(Math.random()*prices.length)]};
+            noti.classList.add('show');
+            setTimeout(() => noti.classList.remove('show'), 5000);
+        }, 12000);
+    }
+
+    window.onload = () => {
+        initParticles();
+        renderProducts();
+        checkLogin();
+        startFakeNoti();
+    };
+</script>
+
+    <script>
+    const canvas = document.getElementById('particleCanvas');
+    if(canvas) {
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+        for(let i=0; i<100; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2 + 1,
+                speedY: Math.random() * 1 + 0.5
+            });
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+            particles.forEach(p => {
+                p.y -= p.speedY;
+                if(p.y < 0) p.y = canvas.height;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+</script>
+
+<div class="contact-sidebar">
+    <a href="https://zalo.me/84788265513" target="_blank" class="contact-item zalo">
+        <i class="fa-solid fa-comment"></i>
+    </a>
+    
+    <a href="https://facebook.com/nvh12072006" target="_blank" class="contact-item facebook">
+        <i class="fa-brands fa-facebook-f"></i>
+    </a>
+
+    <a href="https://t.me/@kunmmo2006" target="_blank" class="contact-item telegram">
+        <i class="fa-brands fa-telegram"></i>
+    </a>
+</div>
+    
+</body>
+</html>
