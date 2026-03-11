@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Sinh Nhật Em!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #ffe6e6; /* Màu hồng nhạt */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .container {
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 80%;
+        }
+
+        h1 {
+            color: #ff4d4d;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff4d4d;
+            font-size: 20px;
+            animation: move 3s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes move {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        button {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background: #ff3333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Chúc Mừng Sinh Nhật Em Bé! 🎂</h1>
+        <p id="message">Chúc em một tuổi mới luôn xinh đẹp, hạnh phúc và luôn có anh bên cạnh. Cảm ơn em đã đến bên đời anh! ❤️</p>
+        <button onclick="changeMessage()">Nhấn để nhận thêm lời yêu</button>
+    </div>
+
+    <script>
+        // Tạo hiệu ứng trái tim bay
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+        setInterval(createHeart, 300);
+
+        // Thay đổi lời chúc
+        const messages = [
+            "Em là món quà tuyệt vời nhất của anh!",
+            "Chúc công chúa của anh luôn rạng rỡ như ánh mặt trời.",
+            "Yêu em nhiều hơn mỗi ngày!",
+            "Hôm nay em là xinh nhất, không ai bằng đâu!"
+        ];
+        let index = 0;
+        function changeMessage() {
+            const msgElement = document.getElementById('message');
+            msgElement.innerText = messages[index];
+            index = (index + 1) % messages.length;
+        }
+    </script>
+</body>
+</html>
