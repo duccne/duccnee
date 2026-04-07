@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Khu Vườn Mùa Xuân</title>
+    <title>Nông Trại Mini</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="toolbar">
-        <button class="btn seed active" data-flower="🌻">🌻 Hướng Dương</button>
-        <button class="btn seed" data-flower="🌹">🌹 Hoa Hồng</button>
-        <button class="btn seed" data-flower="🌷">🌷 Hoa Tulip</button>
-        <button class="btn seed" data-flower="🍄">🍄 Nấm</button>
-        <button class="btn" id="theme-btn">Ngắm Trăng 🌙</button>
-        <button class="btn" id="clear-btn">Dọn Vườn 🧹</button>
+    <div class="game-container">
+        <div id="toolbar">
+            <div class="tool active" data-action="seed">🌱 Gieo Hạt</div>
+            <div class="tool" data-action="water">💧 Tưới Nước</div>
+            <div class="tool" data-action="fertilizer">🧪 Bón Phân</div>
+            <div class="tool" data-action="harvest">🧺 Thu Hoạch</div>
+        </div>
+
+        <div id="farm">
+            </div>
     </div>
 
-    <div id="garden"></div>
-
     <script src="script.js"></script>
-
 </body>
 </html>
