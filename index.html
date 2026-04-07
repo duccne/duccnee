@@ -3,45 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web OS - Game Portal</title>
+    <title>PC Game Portal</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="device-screen">
+    <main class="desktop">
+        <div class="icon" onclick="openGame('Cờ Caro', 'caro.html', '❌⭕')">
+            <div class="icon-img">❌⭕</div>
+            <span class="icon-text">Cờ Caro</span>
+        </div>
+
+        <div class="icon" onclick="openGame('Cờ Vua', 'chess.html', '♟️')">
+            <div class="icon-img">♟️</div>
+            <span class="icon-text">Cờ Vua</span>
+        </div>
+
+        <div class="icon" onclick="openGame('Rắn Săn Mồi', 'snake.html', '🐍')">
+            <div class="icon-img">🐍</div>
+            <span class="icon-text">Rắn Săn Mồi</span>
+        </div>
+    </main>
+
+    <div id="game-window" class="window hidden">
+        <div class="window-header">
+            <div class="window-title">
+                <span id="window-icon">🎮</span>
+                <span id="window-name">Tên Game</span>
+            </div>
+            <button class="close-btn" onclick="closeGame()">✖</button>
+        </div>
         
-        <div id="home-screen" class="screen-view active">
-            <div class="status-bar">
-                <span>09:41 AM</span>
-                <span>100% 🔋</span>
-            </div>
-            
-            <div class="app-grid">
-                <div class="app-icon" onclick="openApp('caro.html')">
-                    <div class="icon-box" style="background: #3498db;">❌⭕</div>
-                    <span class="app-name">Cờ Caro</span>
-                </div>
-
-                <div class="app-icon" onclick="openApp('chess.html')">
-                    <div class="icon-box" style="background: #2c3e50;">♟️</div>
-                    <span class="app-name">Cờ Vua</span>
-                </div>
-
-                <div class="app-icon" onclick="openApp('snake.html')">
-                    <div class="icon-box" style="background: #2ecc71;">🐍</div>
-                    <span class="app-name">Rắn Săn Mồi</span>
-                </div>
-            </div>
-        </div>
-
-        <div id="app-screen" class="screen-view">
+        <div class="window-content">
             <iframe id="game-frame" src="" frameborder="0"></iframe>
-            
-            <button class="home-indicator" onclick="closeApp()">
-                <div class="home-bar"></div>
-            </button>
         </div>
-
     </div>
+
+    <footer class="taskbar">
+        <button class="start-btn">🪟 Start</button>
+        
+        <div class="taskbar-apps" id="taskbar-apps"></div>
+        
+        <div class="clock" id="clock">12:00 PM</div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
