@@ -1,57 +1,50 @@
-// Trỏ tới các thành phần HTML
-const gameWindow = document.getElementById('game-window');
-const gameFrame = document.getElementById('game-frame');
-const windowName = document.getElementById('window-name');
-const windowIcon = document.getElementById('window-icon');
-const taskbarApps = document.getElementById('taskbar-apps');
+const garden = document.getElementById('garden');
+const seedButtons = document.querySelectorAll('.seed');
+const clearBtn = document.getElementById('clear-btn');
+const themeBtn = document.getElementById('theme-btn');
 
-// Hàm Mở Cửa Sổ Game
-function openGame(name, url, icon) {
-    // 1. Cập nhật tiêu đề cửa sổ
-    windowName.innerText = name;
-    windowIcon.innerText = icon;
-    
-    // 2. Tải file game vào iframe
-    gameFrame.src = url;
-    
-    // 3. Hiển thị cửa sổ
-    gameWindow.classList.remove('hidden');
-    
-    // 4. Báo hiệu trên thanh Taskbar
-    taskbarApps.innerHTML = `<div class="active-app">${icon} ${name}</div>`;
-}
+let currentFlower = '🌻';
 
-// Hàm Đóng Cửa Sổ Game
-function closeGame() {
-    // 1. Ẩn cửa sổ
-    gameWindow.classList.add('hidden');
-    
-    // 2. Xóa iframe (tránh game vẫn phát nhạc hoặc chạy ngầm gây lag)
-    gameFrame.src = ''; 
-    
-    // 3. Xóa thông báo trên Taskbar
-    taskbarApps.innerHTML = ''; 
-}
+// Xử lý chọn loại hoa
+seedButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        document.querySelector('.seed.active').classList.remove('active');
+        button.classList.add('active');
+        currentFlower = button.getAttribute('data-flower');
+    });
+});
 
-// --- TẠO ĐỒNG HỒ CHO TASKBAR ---
-function updateClock() {
-    const now = new Date();
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
-    
-    // Chuyển sang định dạng 12 giờ (AM/PM)
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // Nếu giờ là 0 thì đổi thành 12
-    
-    // Thêm số 0 đằng trước nếu phút bé hơn 10 (vd: 09)
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    
-    document.getElementById('clock').innerText = `${hours}:${minutes} ${ampm}`;
-}
+// Xử lý sự kiện trồng hoa (Click vào khu vườn)
+garden.addEventListener('mousedown', function(event) {
+    const x = event.clientX;
+    const y = event.clientY - garden.getBoundingClientRect().top;
 
-// Cho đồng hồ chạy mỗi 1 giây (1000 milliseconds)
-setInterval(updateClock, 1000);
+    const flower = document.createElement('div');
+    flower.className = 'flower';
+    flower.innerText = currentFlower;
 
-// Gọi hàm lần đầu để hiện giờ ngay lập tức
-updateClock();
+    // Căn giữa hoa vào đầu mũi tên chuột
+    flower.style.left = (x - 20) + 'px';
+    flower.style.top = (y - 40) + 'px'; 
+
+    // Kích thước ngẫu nhiên tự nhiên
+    const randomScale = 0.8 + Math.random() * 0.5;
+    flower.style.fontSize = (40 * randomScale) + 'px';
+
+    garden.appendChild(flower);
+});
+
+// Xử lý dọn vườn
+clearBtn.addEventListener('click', () => {
+    garden.innerHTML = ''; 
+});
+
+// Xử lý chuyển chế độ Ngày/Đêm
+themeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('night-mode');
+    if (document.body.classList.contains('night-mode')) {
+        themeBtn.innerText = 'Đón Nắng ☀️';
+    } else {
+        themeBtn.innerText = 'Ngắm Trăng 🌙';
+    }
+});
