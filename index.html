@@ -3,33 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cổng Trò Chơi Cổ Điển</title>
+    <title>Web OS - Game Portal</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>🕹️ Cổng Game Cổ Điển</h1>
-        <p>Tuyển tập các trò chơi rèn luyện trí tuệ</p>
-    </header>
-
-    <main>
-        <aside class="game-menu">
-            <button class="menu-btn active">Cờ Caro</button>
-            <button class="menu-btn" onclick="alert('Đang phát triển...')">Cờ Vua</button>
-            <button class="menu-btn" onclick="alert('Đang phát triển...')">Rắn Săn Mồi</button>
-        </aside>
-
-        <section class="game-display">
-            <div class="game-header">
-                <h2>Cờ Caro (Tic-Tac-Toe)</h2>
-                <div id="status">Lượt của: <span id="current-player">X</span></div>
-                <button id="reset-btn">Chơi Lại</button>
+    <div class="device-screen">
+        
+        <div id="home-screen" class="screen-view active">
+            <div class="status-bar">
+                <span>09:41 AM</span>
+                <span>100% 🔋</span>
             </div>
             
-            <div class="board" id="board">
+            <div class="app-grid">
+                <div class="app-icon" onclick="openApp('caro.html')">
+                    <div class="icon-box" style="background: #3498db;">❌⭕</div>
+                    <span class="app-name">Cờ Caro</span>
                 </div>
-        </section>
-    </main>
+
+                <div class="app-icon" onclick="openApp('chess.html')">
+                    <div class="icon-box" style="background: #2c3e50;">♟️</div>
+                    <span class="app-name">Cờ Vua</span>
+                </div>
+
+                <div class="app-icon" onclick="openApp('snake.html')">
+                    <div class="icon-box" style="background: #2ecc71;">🐍</div>
+                    <span class="app-name">Rắn Săn Mồi</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="app-screen" class="screen-view">
+            <iframe id="game-frame" src="" frameborder="0"></iframe>
+            
+            <button class="home-indicator" onclick="closeApp()">
+                <div class="home-bar"></div>
+            </button>
+        </div>
+
+    </div>
 
     <script src="script.js"></script>
 </body>
