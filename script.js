@@ -1,25 +1,57 @@
-const homeScreen = document.getElementById('home-screen');
-const appScreen = document.getElementById('app-screen');
+// Trỏ tới các thành phần HTML
+const gameWindow = document.getElementById('game-window');
 const gameFrame = document.getElementById('game-frame');
+const windowName = document.getElementById('window-name');
+const windowIcon = document.getElementById('window-icon');
+const taskbarApps = document.getElementById('taskbar-apps');
 
-// Hàm mở ứng dụng
-function openApp(gameUrl) {
-    // Đặt đường dẫn file game vào iframe
-    gameFrame.src = gameUrl;
+// Hàm Mở Cửa Sổ Game
+function openGame(name, url, icon) {
+    // 1. Cập nhật tiêu đề cửa sổ
+    windowName.innerText = name;
+    windowIcon.innerText = icon;
     
-    // Thêm class 'active' cho màn hình App, gỡ khỏi màn hình Home
-    homeScreen.classList.remove('active');
-    appScreen.classList.add('active');
+    // 2. Tải file game vào iframe
+    gameFrame.src = url;
+    
+    // 3. Hiển thị cửa sổ
+    gameWindow.classList.remove('hidden');
+    
+    // 4. Báo hiệu trên thanh Taskbar
+    taskbarApps.innerHTML = `<div class="active-app">${icon} ${name}</div>`;
 }
 
-// Hàm đóng ứng dụng (Quay về trang chủ)
-function closeApp() {
-    // Trở về Home
-    appScreen.classList.remove('active');
-    homeScreen.classList.add('active');
+// Hàm Đóng Cửa Sổ Game
+function closeGame() {
+    // 1. Ẩn cửa sổ
+    gameWindow.classList.add('hidden');
     
-    // Dọn dẹp iframe để game dừng chạy ngầm (tiết kiệm tài nguyên)
-    setTimeout(() => {
-        gameFrame.src = ''; 
-    }, 400); // Chờ hiệu ứng CSS mờ đi rồi mới xóa src
+    // 2. Xóa iframe (tránh game vẫn phát nhạc hoặc chạy ngầm gây lag)
+    gameFrame.src = ''; 
+    
+    // 3. Xóa thông báo trên Taskbar
+    taskbarApps.innerHTML = ''; 
 }
+
+// --- TẠO ĐỒNG HỒ CHO TASKBAR ---
+function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    
+    // Chuyển sang định dạng 12 giờ (AM/PM)
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // Nếu giờ là 0 thì đổi thành 12
+    
+    // Thêm số 0 đằng trước nếu phút bé hơn 10 (vd: 09)
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    
+    document.getElementById('clock').innerText = `${hours}:${minutes} ${ampm}`;
+}
+
+// Cho đồng hồ chạy mỗi 1 giây (1000 milliseconds)
+setInterval(updateClock, 1000);
+
+// Gọi hàm lần đầu để hiện giờ ngay lập tức
+updateClock();
